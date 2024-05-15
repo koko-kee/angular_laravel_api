@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class TaskController extends Controller
@@ -120,4 +121,41 @@ class TaskController extends Controller
             ]);
         }
     }
+
+    public function changeStatus(Request $request, int $id)
+    {
+        $task = auth()->user()->tasks()->where('id',$id)->first();
+        if($task)
+        {
+            $task->status = $request->input('status');
+            $task->save();
+            return response()->json([
+                'statut' => 200,
+                'data' => $task
+            ]);
+        }else{
+            return response()->json([
+                'statut' => 404,
+                'data' => null
+            ]);
+        }
+
+    }
+
+    public function getStatisqueTask()
+    {
+        $tasks = auth()->user()->tasks()
+            ->select('status',DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->orderBy('status','desc')
+            ->get();
+        return response()->json([
+            'statut' => 200,
+            'data' => $tasks
+        ]);
+    }
+
+
+
+
 }

@@ -22,4 +22,6 @@ Route::middleware('auth:api')
         Route::post('/logout',[\App\Http\Controllers\Api\AuthController::class,'logout'])->name('logout');
         Route::resource('tasks',\App\Http\Controllers\Api\TaskController::class);
         Route::post('tasks/{id}',[\App\Http\Controllers\Api\TaskController::class,'update']);
+        Route::post('tasks/change/{id}',[\App\Http\Controllers\Api\TaskController::class,'changeStatus']);
+        Route::get('/count',[\App\Http\Controllers\Api\TaskController::class,'getStatisqueTask']);
     });
